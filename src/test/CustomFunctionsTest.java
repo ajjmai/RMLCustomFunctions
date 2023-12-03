@@ -3,20 +3,16 @@ package test;
 import main.CustomFunctions;
 import org.junit.jupiter.api.Test;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class CustomFunctionsTest {
 
     @Test
-    void statuteWorkIRI() throws URISyntaxException {
+    void statuteWorkIRI() {
         String docNumber = "1501";
         String docYear = "1993";
         String result = CustomFunctions.statuteWorkIRI(docNumber, docYear);
-        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501" , result);
-//        assertEquals(new URI("http://ldf.fi/lawsampo/eli/statute/1993/1501") , result);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501", result);
 
     }
 
@@ -25,26 +21,25 @@ class CustomFunctionsTest {
         String docNumber = "1501";
         String docYear = "1993";
         String result = CustomFunctions.statuteVersionOriginalIRI(docNumber, docYear);
-        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/original" , result);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/original", result);
     }
 
     @Test
     void statuteVersionConsolidatedIRI() {
         String docNumber = "1501";
         String docYear = "1993";
-        String version = "@20031301";
-        String result = CustomFunctions.statuteVersionConsolidatedIRI(docNumber, docYear, version);
-        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/consolidated/20031301" , result);
+        String result = CustomFunctions.statuteVersionConsolidatedIRI(docNumber, docYear);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/consolidated", result);
     }
 
-//    Section of Law Work
+    //    Section of Law Work
     @Test
     void sectionOfLawWorkIRIPart() {
         String docNumber = "1501";
         String docYear = "1993";
         String eId = "part_1";
         String result = CustomFunctions.sectionOfLawWorkIRI(docNumber, docYear, eId);
-        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1" , result);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1", result);
     }
 
     @Test
@@ -53,47 +48,52 @@ class CustomFunctionsTest {
         String docYear = "1993";
         String eId = "part_1__chp_2";
         String result = CustomFunctions.sectionOfLawWorkIRI(docNumber, docYear, eId);
-        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/2" , result);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/2", result);
     }
+
     @Test
     void sectionOfLawWorkIRISection() {
         String docNumber = "1501";
         String docYear = "1993";
         String eId = "part_1__chp_3__sec_20";
         String result = CustomFunctions.sectionOfLawWorkIRI(docNumber, docYear, eId);
-        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/20" , result);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/20", result);
     }
+
     @Test
     void sectionOfLawWorkIRISectionWithVersion() {
         String docNumber = "1501";
         String docYear = "1993";
         String eId = "part_1__chp_3__sec_18dv20191113";
         String result = CustomFunctions.sectionOfLawWorkIRI(docNumber, docYear, eId);
-        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/18d" , result);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/18d", result);
     }
+
     @Test
     void sectionOfLawWorkIRISubsection() {
         String docNumber = "1501";
         String docYear = "1993";
         String eId = "part_1__chp_3__sec_20__subsec_1";
         String result = CustomFunctions.sectionOfLawWorkIRI(docNumber, docYear, eId);
-        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/20/subsec/1" , result);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/20/subsec/1", result);
     }
+
     @Test
     void sectionOfLawWorkIRISubsectionParagraph() {
         String docNumber = "1501";
         String docYear = "1993";
         String eId = "part_1__chp_3__sec_21__subsec_1__para_1";
         String result = CustomFunctions.sectionOfLawWorkIRI(docNumber, docYear, eId);
-        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/21/subsec/1/para/1" , result);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/21/subsec/1/para/1", result);
     }
+
     @Test
     void sectionOfLawWorkIRISubsectionParagraphWithVersion() {
         String docNumber = "1501";
         String docYear = "1993";
         String eId = "part_1__chp_3__sec_21__subsec_1v20071312__para_1v20071312";
         String result = CustomFunctions.sectionOfLawWorkIRI(docNumber, docYear, eId);
-        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/21/subsec/1/para/1" , result);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/21/subsec/1/para/1", result);
     }
 
     //    Section of Law Version - Original
@@ -103,7 +103,7 @@ class CustomFunctionsTest {
         String docYear = "1993";
         String eId = "part_1";
         String result = CustomFunctions.sectionOfLawVersionOriginalIRI(docNumber, docYear, eId);
-        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/original" , result);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/original", result);
     }
 
     @Test
@@ -112,31 +112,43 @@ class CustomFunctionsTest {
         String docYear = "1993";
         String eId = "part_1__chp_2";
         String result = CustomFunctions.sectionOfLawVersionOriginalIRI(docNumber, docYear, eId);
-        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/2/original" , result);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/2/original", result);
     }
+
     @Test
     void sectionOfLawVersionOriginalIRISection() {
         String docNumber = "1501";
         String docYear = "1993";
         String eId = "part_1__chp_3__sec_20";
         String result = CustomFunctions.sectionOfLawVersionOriginalIRI(docNumber, docYear, eId);
-        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/20/original" , result);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/20/original", result);
     }
+
     @Test
     void sectionOfLawVersionOriginalIRISubsection() {
         String docNumber = "1501";
         String docYear = "1993";
         String eId = "part_1__chp_3__sec_20__subsec_1";
         String result = CustomFunctions.sectionOfLawVersionOriginalIRI(docNumber, docYear, eId);
-        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/20/subsec/1/original" , result);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/20/subsec/1/original", result);
     }
+
     @Test
     void sectionOfLawVersionOriginalIRISubsectionParagraph() {
         String docNumber = "1501";
         String docYear = "1993";
         String eId = "part_1__chp_3__sec_21__subsec_1__para_1";
         String result = CustomFunctions.sectionOfLawVersionOriginalIRI(docNumber, docYear, eId);
-        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/21/subsec/1/para/1/original" , result);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/21/subsec/1/para/1/original", result);
+    }
+
+    @Test
+    void sectionOfLawVersionOriginalIRIReturnsNullForNotOriginal() {
+        String docNumber = "1501";
+        String docYear = "1993";
+        String eId = "part_1__chp_3__sec_21__subsec_1v20071312__para_1v20071312";
+        String result = CustomFunctions.sectionOfLawVersionOriginalIRI(docNumber, docYear, eId);
+        assertNull(result);
     }
 
     //    Section of Law Version - Consolidated
@@ -146,8 +158,8 @@ class CustomFunctionsTest {
         String docNumber = "1501";
         String docYear = "1993";
         String eId = "part_1__chp_3av19941486";
-        String result = CustomFunctions.sectionOfLawVersionConsolidatedIRI(docNumber, docYear, eId);
-        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3a/consolidated/19941486" , result);
+        String result = CustomFunctions.sectionOfLawVersionConsolidatedIRI(docNumber, docYear, eId, null);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3a/consolidated/19941486", result);
     }
 
     @Test
@@ -155,16 +167,17 @@ class CustomFunctionsTest {
         String docNumber = "1501";
         String docYear = "1993";
         String eId = "part_1__chp_3__sec_18dv20191113";
-        String result = CustomFunctions.sectionOfLawVersionConsolidatedIRI(docNumber, docYear, eId);
-        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/18d/consolidated/20191113" , result);
+        String result = CustomFunctions.sectionOfLawVersionConsolidatedIRI(docNumber, docYear, eId, null);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/18d/consolidated/20191113", result);
     }
+
     @Test
     void sectionOfLawVersionConsolidatedIRISubsectionWithVersion() {
         String docNumber = "1501";
         String docYear = "1993";
         String eId = "part_1__chp_3av19941486__sec_26v19941486__subsec_3v20211113";
-        String result = CustomFunctions.sectionOfLawVersionConsolidatedIRI(docNumber, docYear, eId);
-        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3a/sec/26/subsec/3/consolidated/20211113" , result);
+        String result = CustomFunctions.sectionOfLawVersionConsolidatedIRI(docNumber, docYear, eId, null);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3a/sec/26/subsec/3/consolidated/20211113", result);
     }
 
     @Test
@@ -172,21 +185,71 @@ class CustomFunctionsTest {
         String docNumber = "1501";
         String docYear = "1993";
         String eId = "part_1__chp_3__sec_21__subsec_1v20071312__para_1v20071312";
-        String result = CustomFunctions.sectionOfLawVersionConsolidatedIRI(docNumber, docYear, eId);
-        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/21/subsec/1/para/1/consolidated/20071312" , result);
+        String result = CustomFunctions.sectionOfLawVersionConsolidatedIRI(docNumber, docYear, eId, null);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/21/subsec/1/para/1/consolidated/20071312", result);
+    }
+
+    @Test
+    void sectionOfLawVersionConsolidatedIRIIntroWithVersion() {
+        String docNumber = "1501";
+        String docYear = "1993";
+        String eId = "part_1__chp_2__sec_8cv20100686__subsec_1v20100686__intro";
+        String result = CustomFunctions.sectionOfLawVersionConsolidatedIRI(docNumber, docYear, eId, null);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/2/sec/8c/subsec/1/intro/consolidated/20100686", result);
+    }
+
+    @Test
+    void sectionOfLawVersionConsolidatedIRICrossHeadingWithVersion() {
+        String docNumber = "1501";
+        String docYear = "1993";
+        String eId = "part_1__chp_2__crossHeading_9";
+        String result = CustomFunctions.sectionOfLawVersionConsolidatedIRI(docNumber, docYear, eId, "@20100686");
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/2/crossHeading/9/consolidated/20100686", result);
     }
 
     @Test
     void amendedByStatuteWorkIRI() {
+        String eId = "part_1__chp_2__crossHeading_9";
         String version = "@19931501";
-        String result = CustomFunctions.amendedByStatuteWorkIRI(version);
-        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501" , result);
+        String result = CustomFunctions.amendedByStatuteWorkIRI(eId, version);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501", result);
     }
+
     @Test
     void amendedByStatuteWorkIRIWithLeadingZeros() {
+        String eId = "part_1__chp_2__crossHeading_9";
         String version = "@19930001";
-        String result = CustomFunctions.amendedByStatuteWorkIRI(version);
-        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1" , result);
+        String result = CustomFunctions.amendedByStatuteWorkIRI(eId, version);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1", result);
+    }
+
+    @Test
+    void amendedByStatuteWorkIRIFromEid() {
+        String eId = "\"part_1__chp_3av19941486__sec_26v19941486__subsec_3v20211113\"";
+        String result = CustomFunctions.amendedByStatuteWorkIRI(eId, null);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/2021/1113", result);
+    }
+
+    void amendedByStatuteLocalId() {
+        String eId = "part_1__chp_2__crossHeading_9";
+        String version = "@19931501";
+        String result = CustomFunctions.amendedByStatuteLocalId(eId, version);
+        assertEquals("1501/1993", result);
+    }
+
+    @Test
+    void amendedByStatuteLocalIdWithLeadingZeros() {
+        String eId = "part_1__chp_2__crossHeading_9";
+        String version = "@19930001";
+        String result = CustomFunctions.amendedByStatuteLocalId(eId, version);
+        assertEquals("1/1993", result);
+    }
+
+    @Test
+    void amendedByStatuteLocalIdFromEid() {
+        String eId = "part_1__chp_3av19941486__sec_26v19941486__subsec_3v20211113";
+        String result = CustomFunctions.amendedByStatuteLocalId(eId, null);
+        assertEquals("1113/2021", result);
     }
 
     @Test
@@ -196,6 +259,7 @@ class CustomFunctionsTest {
         String result = CustomFunctions.lssStatuteIRI(docNumber, docYear);
         assertEquals("http://ldf.fi/lawsampo/statute_eli_sd_1993_1501", result);
     }
+
     @Test
     void preliminaryWorkIRIShortYear() {
         String identifier = "HE 88/93";
@@ -213,13 +277,14 @@ class CustomFunctionsTest {
     @Test
     void governmentProposalURIShortYear() {
         String identifier = "HE 88/93";
-        String result = CustomFunctions.governmentProposalURI(identifier);
+        String result = CustomFunctions.governmentProposalURL(identifier);
         assertEquals("https://www.eduskunta.fi/FI/Vaski/sivut/trip.aspx?triptype=ValtiopaivaAsiat&docid=HE+88/1993", result);
     }
+
     @Test
     void governmentProposalURI() {
         String identifier = "HE 88/1993";
-        String result = CustomFunctions.governmentProposalURI(identifier);
+        String result = CustomFunctions.governmentProposalURL(identifier);
         assertEquals("https://www.eduskunta.fi/FI/Vaski/sivut/trip.aspx?triptype=ValtiopaivaAsiat&docid=HE+88/1993", result);
     }
 
@@ -246,7 +311,7 @@ class CustomFunctionsTest {
         String docNumber = "1501";
         String docYear = "1993";
         String eId = "part_1__chp_3__sec_21__subsec_1v20071312__para_1v20071312";
-        String result = CustomFunctions.sectionOfLawVersionConsolidatedFiIRI(docNumber, docYear, eId);
+        String result = CustomFunctions.sectionOfLawVersionConsolidatedFiIRI(docNumber, docYear, eId, null);
         assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/21/subsec/1/para/1/consolidated/20071312/fin", result);
     }
 
@@ -255,20 +320,129 @@ class CustomFunctionsTest {
         String docNumber = "1501";
         String docYear = "1993";
         String eId = "part_1__chp_3__sec_21__subsec_1v20071312__para_1v20071312";
-        String result = CustomFunctions.sectionOfLawVersionConsolidatedFiTextIRI(docNumber, docYear, eId);
+        String result = CustomFunctions.sectionOfLawVersionConsolidatedFiTextIRI(docNumber, docYear, eId, null);
         assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/21/subsec/1/para/1/consolidated/20071312/fin/txt", result);
     }
 
     @Test
-    void formatHeading() {
-        String heading = "Myynti ja yhteisöhankinta Suomessa (29.12.1994/1486)\n                  ";
-        String result = CustomFunctions.formatHeading(heading);
+    void trimOrNullWithStringContainingWhitespace() {
+        String str = "Myynti ja yhteisöhankinta Suomessa (29.12.1994/1486)\n                  ";
+        String result = CustomFunctions.trimOrNull(str);
         assertEquals("Myynti ja yhteisöhankinta Suomessa (29.12.1994/1486)", result);
     }
+
     @Test
-    void formatHeadingEmptyString() {
-        String heading = "";
-        String result = CustomFunctions.formatHeading(heading);
-        assertEquals("", result);
+    void trimOrNullWithEmptyString() {
+        String str = "";
+        String result = CustomFunctions.trimOrNull(str);
+        assertNull(result);
     }
+    @Test
+    void trimOrNullWithNullString() {
+        String result = CustomFunctions.trimOrNull(null);
+        assertNull(result);
+    }
+
+    @Test
+    void getPartClass() {
+        String eId = "part_1";
+        String result = CustomFunctions.getSectionOfLawClass(eId, false);
+        assertEquals("http://data.finlex.fi/schema/sfl/Part", result);
+    }
+    @Test
+    void getChapterClass() {
+        String eId = "part_1__chp_1";
+        String result = CustomFunctions.getSectionOfLawClass(eId, false);
+        assertEquals("http://data.finlex.fi/schema/sfl/Chapter", result);
+    }
+
+    @Test
+    void getSectionClass() {
+        String eId = "part_1__chp_2__sec_4v20091780";
+        String result = CustomFunctions.getSectionOfLawClass(eId, false);
+        assertEquals("http://data.finlex.fi/schema/sfl/Section", result);
+    }
+
+    @Test
+    void getSubsectionClass() {
+        String eId = "part_1__chp_2__sec_4v20091780__subsec_1v20091780";
+        String result = CustomFunctions.getSectionOfLawClass(eId, false);
+        assertEquals("http://data.finlex.fi/schema/sfl/Subsection", result);
+    }
+
+    @Test
+    void getParagraphVersionClass() {
+        String eId = "part_1__chp_2__sec_8cv20100686__subsec_1v20100686__para_2v20100686";
+        String result = CustomFunctions.getSectionOfLawClass(eId, true);
+        assertEquals("http://data.finlex.fi/schema/sfl/ParagraphVersion", result);
+    }
+    @Test
+    void getSubParagraphVersionClass() {
+        String eId = "part_1__chp_9__sec_94__subsec_1__para_14v20091359__subpara_av20091359";
+        String result = CustomFunctions.getSectionOfLawClass(eId, true);
+        assertEquals("http://data.finlex.fi/schema/sfl/SubparagraphVersion", result);
+    }
+
+    @Test
+    void getIntroClass() {
+        String eId = "part_1__chp_9__sec_94bv19941486__subsec_2v20101392__intro";
+        String result = CustomFunctions.getSectionOfLawClass(eId, false);
+        assertEquals("http://data.finlex.fi/schema/sfl/Paragraph", result);
+    }
+
+    @Test
+    void getSubheadingClass() {
+        String eId = "part_1__chp_9__crossHeading_4";
+        String result = CustomFunctions.getSectionOfLawClass(eId, false);
+        assertEquals("http://data.finlex.fi/schema/sfl/Subheading", result);
+    }
+
+//    String eId = "part_1__chp_9__sec_94bv19941486__subsec_2v20101392__intro";
+//    String eId = "part_1__chp_9__crossHeading_4";
+//    String eId = "part_1__chp_9__sec_94__subsec_1__para_14v20091359__subpara_av20091359";
+//
+//
+//    String eId = "part_1__chp_3__sec_18dv20191113";
+
+
+
+
+
+    @Test
+    void getSectionOfLawNumberSubsec() {
+    String eId = "part_1__chp_9__sec_94bv19941486__subsec_2v20101392";
+    String result = CustomFunctions.getSectionOfLawNumber(eId);
+    assertEquals("2", result);
+    }
+    @Test
+    void getSectionOfLawNumberSectionWithLetter() {
+    String eId = "part_1__chp_3__sec_18dv20191113";
+    String result = CustomFunctions.getSectionOfLawNumber(eId);
+    assertEquals("18d", result);
+    }
+    @Test
+    void getSectionOfLawNumberCrossHeading() {
+    String eId = "part_1__chp_9__crossHeading_4";
+    String result = CustomFunctions.getSectionOfLawNumber(eId);
+    assertEquals("4", result);
+    }
+    @Test
+    void getSectionOfLawNumberSubparagrap() {
+    String eId = "part_1__chp_9__sec_94__subsec_1__para_14v20091359__subpara_av20091359";
+    String result = CustomFunctions.getSectionOfLawNumber(eId);
+    assertEquals("a", result);
+    }
+    @Test
+    void getSectionOfLawNumberChapter() {
+    String eId = "part_1__chp_9";
+    String result = CustomFunctions.getSectionOfLawNumber(eId);
+    assertEquals("9", result);
+    }
+    @Test
+    void getSectionOfLawNumberNullForIntro() {
+    String eId = "part_1__chp_9__sec_94bv19941486__subsec_2v20101392__intro";
+    String result = CustomFunctions.getSectionOfLawNumber(eId);
+    assertEquals("intro", result);
+    }
+
 }

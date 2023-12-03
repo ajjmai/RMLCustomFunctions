@@ -1,95 +1,113 @@
-package main;/*
- x ?statute_work IRI  <http://ldf.fi/lawsampo/statute/eli/1993/1501>
- x ?statute_version_original IRI <http://ldf.fi/lawsampo/statute/eli/1993/1501/original>
- x ?statute_version_consolidated IRI <http://ldf.fi/lawsampo/statute/eli/1993/1501/consolidated>
- x ?section_of_law_work IRI <http://ldf.fi/lawsampo/statute/eli/1993/1501/part/1/chp/7/sec/79a/subsec/2>
+package main;
 
- x ?section_of_law_version IRI
-    <http://ldf.fi/lawsampo/statute/eli/1993/1501/part/1/chp/7/sec/79a/subsec/2/original>
-    <http://ldf.fi/lawsampo/statute/eli/1993/1501/part/1/chp/7/sec/79a/subsec/2/consolidated/12345678>
-
- x ?amended_by IRI (work taso) <http://ldf.fi/lawsampo/statute/eli/1993/1501>
-
- x ?preliminary_work IRI <http://ldf.fi/lawsampo/statute/eli/HE/1993/88>
- x ?government_proposal_url IRI <https://www.eduskunta.fi/FI/Vaski/sivut/trip.aspx?triptype=ValtiopaivaAsiat&docid=HE+88/1993>
-
- x ?id_local "1501/1993"
- x ?lss_statute IRI <http://ldf.fi/lawsampo/statute_eli_sd_1993_1501>
-
- x?statute_version_original_fi IRI <http://ldf.fi/lawsampo/statute/eli/1993/1501/part/1/chp/4/sec/33a/original/fin>
- x?statute_version_consolidated_fi IRI <http://ldf.fi/lawsampo/statute/eli/1993/1501/part/1/chp/4/sec/33a/consolidated/20071061/fin>
-
- X?statute_version_original_fi_txt IRI <http://ldf.fi/lawsampo/statute/eli/1993/1501/part/1/chp/4/sec/33a/original/fin/txt>
- x?statute_version_consolidated_fi_txt IRI <http://ldf.fi/lawsampo/statute/eli/1993/1501/part/1/chp/4/sec/33a/consolidated/20071061/fin/txt>
-
- ?section_of_law_number_short "133c"
- ?section_of_law_number_int 133
- ?section_of_law_number_letter "c"
- ?section_of_law_number_str   "133 c §"
-
- x ?section_of_law_heading stripped string "Kunnanvaltuuston päätösvalta"
-
- */
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CustomFunctions {
-//    public static void main(String[] args) {
-//        System.out.println("Hello world!");
-//    }
-
-    public static String getStatuteNumberForIRIs(String docNumber, String year) {
-        return year + "/" + docNumber;
-    }
-    public static String idLocal(String docNumber, String year) {
-        return  docNumber + "/" + year;
-    }
 
     public static String statuteWorkIRI(String docNumber, String year) {
-        return "http://ldf.fi/lawsampo/eli/statute/" + year + "/" + docNumber ;
-    }
-    public static String statuteVersionOriginalIRI(String docNumber, String year) {
-        return statuteWorkIRI(docNumber, year) + "/original" ;
+        return "http://ldf.fi/lawsampo/eli/statute/" + year + "/" + docNumber;
     }
 
-    public static String statuteVersionConsolidatedIRI(String docNumber, String year, String version) {
-        return statuteWorkIRI(docNumber, year) + "/consolidated/" + version.substring(1);
+    public static String statuteVersionOriginalIRI(String docNumber, String year) {
+        return statuteWorkIRI(docNumber, year) + "/original";
+    }
+
+    public static String statuteVersionConsolidatedIRI(String docNumber, String year) {
+        return statuteWorkIRI(docNumber, year) + "/consolidated";
     }
 
     public static String sectionOfLawWorkIRI(String docNumber, String year, String eId) {
-        return statuteWorkIRI(docNumber, year) + "/" +
-                eId.replaceAll("_+", "/").replaceAll("v\\d{8}", "");
+        return statuteWorkIRI(docNumber, year) + "/" + eId.replaceAll("_+", "/").replaceAll("v\\d{8}", "");
     }
 
     public static String sectionOfLawVersionOriginalIRI(String docNumber, String year, String eId) {
-        return statuteWorkIRI(docNumber, year) + "/" +
-                eId.replaceAll("_+", "/") + "/original";
+        if (!isOriginalVersion(eId)) {
+            return null;
+        }
+        return statuteWorkIRI(docNumber, year) + "/" + eId.replaceAll("_+", "/") + "/original";
     }
-    public static String sectionOfLawVersionConsolidatedIRI(String docNumber, String year, String eId) {
-        String version = eId.substring(eId.length() - 8);
-        return statuteWorkIRI(docNumber, year) + "/" +
-                eId.replaceAll("_+", "/").replaceAll("v\\d{8}", "") +
-                "/consolidated/" + version;
+
+    public static String sectionOfLawVersionConsolidatedIRI(String docNumber, String year, String eId, String version) {
+        if (version != null) {
+            return statuteWorkIRI(docNumber, year) + "/" + eId.replaceAll("_+", "/").replaceAll("v\\d{8}", "")
+                    + "/consolidated/" + version.replace("@", "");
+        }
+
+        if (isOriginalVersion(eId)) {
+            return null;
+        }
+
+        String versionFromEid = getStatuteIdFromEid(eId);
+
+        return statuteWorkIRI(docNumber, year) + "/" + eId.replaceAll("_+", "/").replaceAll("v\\d{8}", "")
+                + "/consolidated/" + versionFromEid;
     }
 
     public static String sectionOfLawVersionOriginalFiIRI(String docNumber, String year, String eId) {
-        return sectionOfLawVersionOriginalIRI(docNumber, year, eId) + "/fin" ;
+        if (!isOriginalVersion(eId)) {
+            return null;
+        }
+        return sectionOfLawVersionOriginalIRI(docNumber, year, eId) + "/fin";
     }
+
     public static String sectionOfLawVersionOriginalFiTextIRI(String docNumber, String year, String eId) {
-        return sectionOfLawVersionOriginalFiIRI(docNumber, year, eId) + "/txt" ;
+        if (!isOriginalVersion(eId)) {
+            return null;
+        }
+        return sectionOfLawVersionOriginalFiIRI(docNumber, year, eId) + "/txt";
     }
 
-    public static String sectionOfLawVersionConsolidatedFiIRI(String docNumber, String year, String eId) {
-        return sectionOfLawVersionConsolidatedIRI(docNumber, year, eId) + "/fin";
-    }
-    public static String sectionOfLawVersionConsolidatedFiTextIRI(String docNumber, String year, String eId) {
-        return sectionOfLawVersionConsolidatedFiIRI(docNumber, year, eId) + "/txt";
+    public static String sectionOfLawVersionConsolidatedFiIRI(String docNumber, String year, String eId, String version) {
+        if (version == null && isOriginalVersion(eId)) {
+            return null;
+        }
+
+        return sectionOfLawVersionConsolidatedIRI(docNumber, year, eId, version) + "/fin";
     }
 
-    public static String amendedByStatuteWorkIRI(String version) {
-        String year = version.substring(1, 5);
-        String number = version.substring(5).replaceFirst("^0+(?!$)", "");
-        return statuteWorkIRI(number, year);
+    public static String sectionOfLawVersionConsolidatedFiTextIRI(String docNumber, String year, String eId, String version) {
+        if (version == null && isOriginalVersion(eId)) {
+            return null;
+        }
+        return sectionOfLawVersionConsolidatedFiIRI(docNumber, year, eId, version) + "/txt";
     }
+
+    public static String amendedByStatuteWorkIRI(String eId, String version) {
+        if (version == null && isOriginalVersion(eId)) {
+            return null;
+        }
+
+        if (version != null) {
+            String year = version.substring(1, 5);
+            String number = version.substring(5).replaceFirst("^0+(?!$)", "");
+            return statuteWorkIRI(number, year);
+        } else {
+            String versionFromEid = getStatuteIdFromEid(eId);
+            String year = versionFromEid.substring(0, 4);
+            String number = versionFromEid.substring(4).replaceFirst("^0+(?!$)", "");
+            return statuteWorkIRI(number, year);
+        }
+    }
+
+    public static String amendedByStatuteLocalId(String eId, String version) {
+        if (version == null && isOriginalVersion(eId)) {
+            return null;
+        }
+
+        if (version != null) {
+            String year = version.substring(1, 5);
+            String number = version.substring(5).replaceFirst("^0+(?!$)", "");
+            return number + "/" + year;
+        } else {
+            String versionFromEid = getStatuteIdFromEid(eId);
+            String year = versionFromEid.substring(0, 4);
+            String number = versionFromEid.substring(4).replaceFirst("^0+(?!$)", "");
+            return number + "/" + year;
+        }
+    }
+
+
     public static String lssStatuteIRI(String docNumber, String year) {
         return "http://ldf.fi/lawsampo/statute_eli_sd_" + year + "_" + docNumber;
     }
@@ -101,16 +119,85 @@ public class CustomFunctions {
         return "http://ldf.fi/lawsampo/eli/" + parts[0] + "/" + year + "/" + yearAndNumber[0];
     }
 
-    public static String governmentProposalURI(String identifier) {
+    public static String governmentProposalURL(String identifier) {
         String[] parts = identifier.split(" ");
         String[] yearAndNumber = parts[1].split("/");
         String year = yearAndNumber[1].length() == 2 ? "19" + yearAndNumber[1] : yearAndNumber[1];
-        return "https://www.eduskunta.fi/FI/Vaski/sivut/trip.aspx?triptype=ValtiopaivaAsiat&docid="+ parts[0] + "+" + yearAndNumber[0] + "/" + year;
+        return "https://www.eduskunta.fi/FI/Vaski/sivut/trip.aspx?triptype=ValtiopaivaAsiat&docid=" + parts[0] + "+"
+                + yearAndNumber[0] + "/" + year;
     }
 
-    public static String formatHeading(String heading) {
-        return heading.strip();
+    public static String trimOrNull(String str) {
+        if (str == null || str.isBlank()) {
+            return null;
+        }
+        return str.strip();
     }
 
+    public static String getSectionOfLawClass(String eId, Boolean versionLevel) {
+        String version = versionLevel ? "Version" : "";
+        String sectionOfLaw = getSectionOfLaw(eId);
+        return sectionOfLaw != null ? sectionOfLaw + version : null;
+    }
 
+    public static String getSectionOfLawNumber(String eId) {
+        String regex = "\\w+$";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(eId.replaceAll("_+", "/").replaceAll("v\\d{8}", ""));
+
+        if (matcher.find()) {
+            return matcher.group();
+        } else {
+            return null;
+        }
+    }
+
+    private static String getSectionOfLaw(String eId) {
+        if (eId.contains("intro")) {
+            return "http://data.finlex.fi/schema/sfl/Paragraph";
+        } else if (eId.contains("crossHeading")) {
+            return "http://data.finlex.fi/schema/sfl/Subheading";
+        } else if (eId.contains("subpara")) {
+            return "http://data.finlex.fi/schema/sfl/Subparagraph";
+        } else if (eId.contains("para")) {
+            return "http://data.finlex.fi/schema/sfl/Paragraph";
+        } else if (eId.contains("subsec")) {
+            return "http://data.finlex.fi/schema/sfl/Subsection";
+        } else if (eId.contains("sec")) {
+            return "http://data.finlex.fi/schema/sfl/Section";
+        } else if (eId.contains("chp")) {
+            return "http://data.finlex.fi/schema/sfl/Chapter";
+        } else if (eId.contains("part")) {
+            return "http://data.finlex.fi/schema/sfl/Part";
+        }
+        return null;
+    }
+
+    private static boolean isOriginalVersion(String eId) {
+        String regex = "v\\d{8}";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(eId);
+
+        if (matcher.find()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private static String getStatuteIdFromEid(String eId) {
+        String regex = "v\\d{8}(?!.*v\\d{8})";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(eId);
+
+        String versionFromEid = "";
+
+        if (matcher.find()) {
+            versionFromEid = matcher.group().replace("v", "");
+        }
+        return versionFromEid;
+    }
 }
