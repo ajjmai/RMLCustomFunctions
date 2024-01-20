@@ -2,49 +2,80 @@ package main;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 public class CustomFunctions {
 
     public static String statuteWorkIRI(String docNumber, String year) {
+        if (docNumber == null || docNumber.isBlank()) {
+            throw new IllegalArgumentException("statuteVersionConsolidatedIRI: docNumber cannot be null or empty");
+        } else if (year == null || year.isBlank()) {
+            throw new IllegalArgumentException("statuteVersionConsolidatedIRI: year cannot be null or empty");
+        }
         return "http://ldf.fi/lawsampo/eli/statute/" + year + "/" + docNumber;
     }
 
     public static String statuteVersionOriginalIRI(String docNumber, String year) {
+        if (docNumber == null || docNumber.isBlank()) {
+            throw new IllegalArgumentException("statuteVersionConsolidatedIRI: docNumber cannot be null or empty");
+        } else if (year == null || year.isBlank()) {
+            throw new IllegalArgumentException("statuteVersionConsolidatedIRI: year cannot be null or empty");
+        }
         return statuteWorkIRI(docNumber, year) + "/original";
     }
 
     public static String statuteVersionConsolidatedIRI(String docNumber, String year) {
+        if (docNumber == null || docNumber.isBlank()) {
+            throw new IllegalArgumentException("statuteVersionConsolidatedIRI: docNumber cannot be null or empty");
+        } else if (year == null || year.isBlank()) {
+            throw new IllegalArgumentException("statuteVersionConsolidatedIRI: year cannot be null or empty");
+        }
         return statuteWorkIRI(docNumber, year) + "/consolidated";
     }
 
     public static String sectionOfLawWorkIRI(String docNumber, String year, String eId) {
-        return statuteWorkIRI(docNumber, year) + "/" + eId.replaceAll("_+", "/").replaceAll("v\\d{8}", "");
+        if (eId == null || eId.isBlank()) {
+            throw new IllegalArgumentException("sectionOfLawWorkIRI: eId cannot be null or empty");
+        }
+
+        String iri = statuteWorkIRI(docNumber, year) + "/" + eId.replaceAll("_+", "/").replaceAll("v\\d{8}", "");
+        if (iri.endsWith("/crossHeading")) {
+            return iri + "/1";
+        } else {
+            return iri;
+        }
     }
 
     public static String sectionOfLawVersionOriginalIRI(String docNumber, String year, String eId) {
+        if (eId == null || eId.isBlank()) {
+            throw new IllegalArgumentException("sectionOfLawVersionOriginalIRI: eId cannot be null or empty");
+        }
         if (!isOriginalVersion(eId)) {
             return null;
         }
-        return statuteWorkIRI(docNumber, year) + "/" + eId.replaceAll("_+", "/") + "/original";
+        return sectionOfLawWorkIRI(docNumber, year, eId) + "/original";
     }
 
     public static String sectionOfLawVersionConsolidatedIRI(String docNumber, String year, String eId, String version) {
         if (version != null) {
-            return statuteWorkIRI(docNumber, year) + "/" + eId.replaceAll("_+", "/").replaceAll("v\\d{8}", "")
-                    + "/consolidated/" + version.replace("@", "");
+            return sectionOfLawWorkIRI(docNumber, year, eId) + "/consolidated/" + version.replace("@", "");
         }
-
+        if (eId == null || eId.isBlank()) {
+            throw new IllegalArgumentException("sectionOfLawVersionConsolidatedIRI: eId cannot be null or empty");
+        }
         if (isOriginalVersion(eId)) {
             return null;
         }
 
         String versionFromEid = getStatuteIdFromEid(eId);
-
-        return statuteWorkIRI(docNumber, year) + "/" + eId.replaceAll("_+", "/").replaceAll("v\\d{8}", "")
-                + "/consolidated/" + versionFromEid;
+        return sectionOfLawWorkIRI(docNumber, year, eId) + "/consolidated/" + versionFromEid;
     }
 
     public static String sectionOfLawVersionOriginalFiIRI(String docNumber, String year, String eId) {
+        if (eId == null || eId.isBlank()) {
+            throw new IllegalArgumentException("sectionOfLawVersionOriginalFiIRI: eId cannot be null or empty");
+        }
+
         if (!isOriginalVersion(eId)) {
             return null;
         }
@@ -52,13 +83,22 @@ public class CustomFunctions {
     }
 
     public static String sectionOfLawVersionOriginalFiTextIRI(String docNumber, String year, String eId) {
+        if (eId == null || eId.isBlank()) {
+            throw new IllegalArgumentException("sectionOfLawVersionOriginalFiTextIRI: eId cannot be null or empty");
+        }
+
         if (!isOriginalVersion(eId)) {
             return null;
         }
         return sectionOfLawVersionOriginalFiIRI(docNumber, year, eId) + "/txt";
     }
 
-    public static String sectionOfLawVersionConsolidatedFiIRI(String docNumber, String year, String eId, String version) {
+    public static String sectionOfLawVersionConsolidatedFiIRI(String docNumber, String year, String eId,
+                                                              String version) {
+        if (eId == null || eId.isBlank()) {
+            throw new IllegalArgumentException("sectionOfLawVersionConsolidatedFiIRI: eId cannot be null or empty");
+        }
+
         if (version == null && isOriginalVersion(eId)) {
             return null;
         }
@@ -66,7 +106,12 @@ public class CustomFunctions {
         return sectionOfLawVersionConsolidatedIRI(docNumber, year, eId, version) + "/fin";
     }
 
-    public static String sectionOfLawVersionConsolidatedFiTextIRI(String docNumber, String year, String eId, String version) {
+    public static String sectionOfLawVersionConsolidatedFiTextIRI(String docNumber, String year, String eId,
+                                                                  String version) {
+        if (eId == null || eId.isBlank()) {
+            throw new IllegalArgumentException("sectionOfLawVersionConsolidatedFiTextIRI: eId cannot be null or empty");
+        }
+
         if (version == null && isOriginalVersion(eId)) {
             return null;
         }
@@ -74,6 +119,10 @@ public class CustomFunctions {
     }
 
     public static String amendedByStatuteWorkIRI(String eId, String version) {
+        if (eId == null || eId.isBlank()) {
+            throw new IllegalArgumentException("amendedByStatuteWorkIRI: eId cannot be null or empty");
+        }
+
         if (version == null && isOriginalVersion(eId)) {
             return null;
         }
@@ -90,7 +139,24 @@ public class CustomFunctions {
         }
     }
 
-    public static String amendedByStatuteLocalId(String eId, String version) {
+    public static boolean isSectionOfLawAmendedByStatute(String statute, String eId, String version) {
+        if (eId == null || eId.isBlank()) {
+            throw new IllegalArgumentException("isSectionOfLawAmendedByStatute: eId cannot be null or empty");
+        }
+
+        if (version == null && isOriginalVersion(eId) || statute == null) {
+            return false;
+        }
+        String amendedBy = amendedByStatuteLocalId(eId, version);
+
+        return amendedBy.equals(statute);
+    }
+
+    private static String amendedByStatuteLocalId(String eId, String version) {
+        if (eId == null || eId.isBlank()) {
+            throw new IllegalArgumentException("amendedByStatuteLocalId: eId cannot be null or empty");
+        }
+
         if (version == null && isOriginalVersion(eId)) {
             return null;
         }
@@ -106,13 +172,15 @@ public class CustomFunctions {
             return number + "/" + year;
         }
     }
-
 
     public static String lssStatuteIRI(String docNumber, String year) {
         return "http://ldf.fi/lawsampo/statute_eli_sd_" + year + "_" + docNumber;
     }
 
     public static String preliminaryWorkIRI(String identifier) {
+        if (identifier == null) {
+            return null;
+        }
         String[] parts = identifier.split(" ");
         String[] yearAndNumber = parts[1].split("/");
         String year = yearAndNumber[1].length() == 2 ? "19" + yearAndNumber[1] : yearAndNumber[1];
@@ -120,11 +188,26 @@ public class CustomFunctions {
     }
 
     public static String governmentProposalURL(String identifier) {
+        if (identifier == null) {
+            return null;
+        }
         String[] parts = identifier.split(" ");
         String[] yearAndNumber = parts[1].split("/");
         String year = yearAndNumber[1].length() == 2 ? "19" + yearAndNumber[1] : yearAndNumber[1];
         return "https://www.eduskunta.fi/FI/Vaski/sivut/trip.aspx?triptype=ValtiopaivaAsiat&docid=" + parts[0] + "+"
                 + yearAndNumber[0] + "/" + year;
+    }
+
+    public static String finlexUrl(String identifier) {
+        if (identifier == null) {
+            return null;
+        }
+
+        String[] parts = identifier.split("/");
+        String year = parts[1];
+        String number = String.format("%04d", Integer.parseInt(parts[0]));
+
+        return "https://www.finlex.fi/fi/laki/alkup/"+ year + "/" + year + number;
     }
 
     public static String trimOrNull(String str) {
@@ -135,22 +218,54 @@ public class CustomFunctions {
     }
 
     public static String getSectionOfLawClass(String eId, Boolean versionLevel) {
+        if (eId == null || eId.isBlank()) {
+            throw new IllegalArgumentException("getSectionOfLawClass: eId cannot be null or empty");
+        }
+
         String version = versionLevel ? "Version" : "";
         String sectionOfLaw = getSectionOfLaw(eId);
         return sectionOfLaw != null ? sectionOfLaw + version : null;
     }
 
     public static String getSectionOfLawNumber(String eId) {
+        if (eId == null || eId.isBlank()) {
+            throw new IllegalArgumentException("getSectionOfLawNumber: eId cannot be null or empty");
+        }
+
         String regex = "\\w+$";
 
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(eId.replaceAll("_+", "/").replaceAll("v\\d{8}", ""));
 
         if (matcher.find()) {
-            return matcher.group();
+            String result = matcher.group();
+            if (result.contains("crossHeading")) {
+                return "1";
+            }
+            return result;
         } else {
             return null;
         }
+    }
+
+    public static boolean isCrossHeading(String eId) {
+        if (eId == null || eId.isBlank()) {
+            throw new IllegalArgumentException("isCrossHeading: eId cannot be null or empty");
+        }
+        return eId.contains("crossHeading");
+    }
+
+    public static boolean isDirectChild(String parent, String child) {
+        if (parent == null || parent.isBlank() || child == null || child.isBlank()) {
+            throw new IllegalArgumentException("isDirectChild: eId cannot be null or empty");
+        }
+        String[] parentParts = parent.split("__");
+        String[] childParts = child.split("__");
+        if (childParts.length != parentParts.length + 1) {
+            return false;
+        }
+        return IntStream.range(0, parentParts.length)
+                .allMatch(i -> parentParts[i].equals(childParts[i]));
     }
 
     private static String getSectionOfLaw(String eId) {
