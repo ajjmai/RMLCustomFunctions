@@ -57,11 +57,11 @@ public class CustomFunctions {
     }
 
     public static String sectionOfLawVersionConsolidatedIRI(String docNumber, String year, String eId, String version) {
-        if (version != null) {
-            return sectionOfLawWorkIRI(docNumber, year, eId) + "/consolidated/" + version.replace("@", "");
-        }
         if (eId == null || eId.isBlank()) {
             throw new IllegalArgumentException("sectionOfLawVersionConsolidatedIRI: eId cannot be null or empty");
+        }
+        if (version != null) {
+            return sectionOfLawWorkIRI(docNumber, year, eId) + "/consolidated/" + version.replace("@", "");
         }
         if (isOriginalVersion(eId)) {
             return null;
@@ -69,6 +69,20 @@ public class CustomFunctions {
 
         String versionFromEid = getStatuteIdFromEid(eId);
         return sectionOfLawWorkIRI(docNumber, year, eId) + "/consolidated/" + versionFromEid;
+    }
+
+    public static String sectionOfLawVersionIRI(String docNumber, String year, String eId, String version) {
+        if (eId == null || eId.isBlank()) {
+            throw new IllegalArgumentException("sectionOfLawVersionIRI: eId cannot be null or empty");
+        }
+        if (version != null) {
+            return sectionOfLawWorkIRI(docNumber, year, eId) + "/" + version.replace("@", "");
+        }
+        if (isOriginalVersion(eId)) {
+            return sectionOfLawWorkIRI(docNumber, year, eId) + "/" + year + paddedDocNumber(docNumber);
+        }
+        String versionFromEid = getStatuteIdFromEid(eId);
+        return sectionOfLawWorkIRI(docNumber, year, eId) + "/" + versionFromEid;
     }
 
     public static String sectionOfLawVersionOriginalFiIRI(String docNumber, String year, String eId) {
@@ -116,6 +130,21 @@ public class CustomFunctions {
             return null;
         }
         return sectionOfLawVersionConsolidatedFiIRI(docNumber, year, eId, version) + "/txt";
+    }
+
+    public static String sectionOfLawVersionFiTextIRI(String docNumber, String year, String eId, String version) {
+        if (eId == null || eId.isBlank()) {
+            throw new IllegalArgumentException("sectionOfLawVersionFiTextIRI: eId cannot be null or empty");
+        }
+
+        return sectionOfLawVersionFiIRI(docNumber, year, eId, version) + "/txt";
+    }
+
+    public static String sectionOfLawVersionFiIRI(String docNumber, String year, String eId, String version) {
+        if (eId == null || eId.isBlank()) {
+            throw new IllegalArgumentException("sectionOfLawVersionFiIRI: eId cannot be null or empty");
+        }
+        return sectionOfLawVersionIRI(docNumber, year, eId, version) + "/fin";
     }
 
     public static String amendedByStatuteWorkIRI(String eId, String version) {
@@ -205,7 +234,7 @@ public class CustomFunctions {
 
         String[] parts = identifier.split("/");
         String year = parts[1];
-        String number = String.format("%04d", Integer.parseInt(parts[0]));
+        String number = paddedDocNumber(parts[0]);
 
         return "https://www.finlex.fi/fi/laki/alkup/"+ year + "/" + year + number;
     }
@@ -268,6 +297,22 @@ public class CustomFunctions {
                 .allMatch(i -> parentParts[i].equals(childParts[i]));
     }
 
+    public static String getVersionClass(String eId, String version) {
+        if (eId == null || eId.isBlank()) {
+            throw new IllegalArgumentException("getVersionClass: eId cannot be null or empty");
+        }
+
+        if (version == null && isOriginalVersion(eId)) {
+            return "http://data.finlex.fi/schema/sfl/Original";
+        } else {
+            return "http://data.finlex.fi/schema/sfl/Consolidated";
+        }
+    }
+
+    private static String paddedDocNumber(String number) {
+        return String.format("%04d", Integer.parseInt(number));
+    }
+
     private static String getSectionOfLaw(String eId) {
         if (eId.contains("intro")) {
             return "http://data.finlex.fi/schema/sfl/Paragraph";
@@ -295,11 +340,7 @@ public class CustomFunctions {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(eId);
 
-        if (matcher.find()) {
-            return false;
-        } else {
-            return true;
-        }
+        return !matcher.find();
     }
 
     private static String getStatuteIdFromEid(String eId) {
