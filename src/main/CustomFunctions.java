@@ -39,9 +39,13 @@ public class CustomFunctions {
         }
 
         String iri = statuteWorkIRI(docNumber, year) + "/" + eId.replaceAll("_+", "/").replaceAll("v\\d{8}", "");
+
         if (iri.endsWith("/crossHeading")) {
             return iri + "/1";
-        } else {
+        } else if (iri.contains("subpara")) {
+            return iri.replaceAll("(/\\d+([a-z]+))$", "/$2");
+        }
+        else {
             return iri;
         }
     }
@@ -268,8 +272,10 @@ public class CustomFunctions {
 
         if (matcher.find()) {
             String result = matcher.group();
-            if (result.contains("crossHeading")) {
+            if (result.contains("crossHeading") || (eId.contains("para") && result.equals("intro"))) {
                 return "1";
+            } else if (eId.contains("subpara")) {
+                return result.replaceAll("\\d+", "");
             }
             return result;
         } else {

@@ -79,10 +79,22 @@ public class SectionOfLawClassAndNumberTest {
         assertEquals("1", result);
     }
     @Test
+    void getSectionOfLawNumberParagraphIntro() {
+        String eId = "chp_1__sec_3v20141127__subsec_1v20141127__para_1v20141127__intro";
+        String result = CustomFunctions.getSectionOfLawNumber(eId);
+        assertEquals("1", result);
+    }
+    @Test
     void getSectionOfLawNumberSubparagrap() {
         String eId = "part_1__chp_9__sec_94__subsec_1__para_14v20091359__subpara_av20091359";
         String result = CustomFunctions.getSectionOfLawNumber(eId);
         assertEquals("a", result);
+    }
+    @Test
+    void getSectionOfLawNumberSubparagrapWithNumberAndLetter() {
+        String eId = "chp_1__sec_3v20141127__subsec_1v20141127__para_1v20141127__subpara_1bv20141127";
+        String result = CustomFunctions.getSectionOfLawNumber(eId);
+        assertEquals("b", result);
     }
     @Test
     void getSectionOfLawNumberChapter() {

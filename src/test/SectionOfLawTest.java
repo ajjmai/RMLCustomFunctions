@@ -34,6 +34,22 @@ public class SectionOfLawTest {
         String result = CustomFunctions.sectionOfLawWorkIRI(docNumber, docYear, eId);
         assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/part/1/chp/3/sec/20", result);
     }
+    @Test
+    void sectionOfLawWorkIRISubparab() {
+        String docNumber = "1501";
+        String docYear = "1993";
+        String eId = "chp_1__sec_3__subsec_1__para_1__subpara_b";
+        String result = CustomFunctions.sectionOfLawWorkIRI(docNumber, docYear, eId);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/chp/1/sec/3/subsec/1/para/1/subpara/b", result);
+    }
+    @Test
+    void sectionOfLawWorkIRISubpara1b() {
+        String docNumber = "1501";
+        String docYear = "1993";
+        String eId = "chp_1__sec_3__subsec_1__para_1__subpara_1b";
+        String result = CustomFunctions.sectionOfLawWorkIRI(docNumber, docYear, eId);
+        assertEquals("http://ldf.fi/lawsampo/eli/statute/1993/1501/chp/1/sec/3/subsec/1/para/1/subpara/b", result);
+    }
 
     @Test
     void sectionOfLawWorkIRISectionWithVersion() {
