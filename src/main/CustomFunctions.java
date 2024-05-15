@@ -265,17 +265,24 @@ public class CustomFunctions {
             throw new IllegalArgumentException("getSectionOfLawNumber: eId cannot be null or empty");
         }
 
-        String regex = "\\w+$";
+        String cleanedEid = eId.replaceAll("_+", "/").replaceAll("v\\d{8}", "");
 
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(eId.replaceAll("_+", "/").replaceAll("v\\d{8}", ""));
+        Pattern pattern = Pattern.compile("\\w+$");
+        Matcher matcher = pattern.matcher(cleanedEid);
 
         if (matcher.find()) {
             String result = matcher.group();
-            if (result.contains("crossHeading") || (eId.contains("para") && result.equals("intro"))) {
+            if (result.contains("crossHeading")) {
                 return "1";
             } else if (eId.contains("subpara")) {
                 return result.replaceAll("\\d+", "");
+            } else if (eId.contains("para") && result.equals("intro")) {
+                Pattern paraPattern = Pattern.compile("para/(\\d+)/intro");
+                Matcher paraMatcher = paraPattern.matcher(cleanedEid);
+
+                if (paraMatcher.find()) {
+                    return paraMatcher.group(1);
+                }
             }
             return result;
         } else {
