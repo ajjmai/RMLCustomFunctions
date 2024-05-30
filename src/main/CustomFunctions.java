@@ -301,8 +301,9 @@ public class CustomFunctions {
         if (parent == null || parent.isBlank() || child == null || child.isBlank()) {
             throw new IllegalArgumentException("isDirectChild: eId cannot be null or empty");
         }
-        String[] parentParts = parent.split("__");
-        String[] childParts = child.split("__");
+        String[] parentParts = parent.replaceAll("v\\d{8}", "").split("__");
+        String[] childParts = child.replaceAll("v\\d{8}", "").split("__");
+
         if (childParts.length != parentParts.length + 1) {
             return false;
         }

@@ -65,9 +65,17 @@ public class DirectChildTest {
 
     @Test
     void subSectionAndParaDirectChild() {
-        String part = "part_1__chp_2__sec_13av19940377__subsec_2v20030325";
-        String chapter = "part_1__chp_2__sec_13av19940377__subsec_2v20030325__para_3v20030325";
-        boolean result = CustomFunctions.isDirectChild(part, chapter);
+        String subsec = "part_1__chp_2__sec_13av19940377__subsec_2v20030325";
+        String para = "part_1__chp_2__sec_13av19940377__subsec_2v20030325__para_3v20030325";
+        boolean result = CustomFunctions.isDirectChild(subsec, para);
+        assertTrue(result);
+    }
+
+    @Test
+    void subSectionAndParaDirectChild2() {
+        String subsec = "chp_12__sec_101__subsec_6v20150663";
+        String para = "chp_12__sec_101__subsec_6__para_6v20150663";
+        boolean result = CustomFunctions.isDirectChild(subsec, para);
         assertTrue(result);
     }
 
