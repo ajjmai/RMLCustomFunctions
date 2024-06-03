@@ -214,10 +214,34 @@ public class CustomFunctions {
         if (identifier == null) {
             return null;
         }
+
+        return "http://ldf.fi/lawsampo/eli/" + preliminaryWorkType(identifier) + "/" + preliminaryWorkYear(identifier) + "/" + preliminaryWorkNumber(identifier);
+    }
+
+    public static String preliminaryWorkNumber(String identifier) {
+        if (identifier == null) {
+            return null;
+        }
         String[] parts = identifier.split(" ");
         String[] yearAndNumber = parts[1].split("/");
-        String year = yearAndNumber[1].length() == 2 ? "19" + yearAndNumber[1] : yearAndNumber[1];
-        return "http://ldf.fi/lawsampo/eli/" + parts[0] + "/" + year + "/" + yearAndNumber[0];
+        return yearAndNumber[0];
+    }
+
+    public static String preliminaryWorkYear(String identifier) {
+        if (identifier == null) {
+            return null;
+        }
+        String[] parts = identifier.split(" ");
+        String[] yearAndNumber = parts[1].split("/");
+        return yearAndNumber[1].length() == 2 ? "19" + yearAndNumber[1] : yearAndNumber[1];
+    }
+
+    public static String preliminaryWorkType(String identifier) {
+        if (identifier == null) {
+            return null;
+        }
+        String[] parts = identifier.split(" ");
+        return parts[0];
     }
 
     public static String governmentProposalURL(String identifier) {
